@@ -21,9 +21,9 @@ class ProductController extends Controller
     {
         $terms = $request->input('q', false);
 
-        $vehicles = (!$terms || !is_string($terms)) ? Product::all() : Product::searchFor($terms);
+        $products = (!$terms || !is_string($terms)) ? Product::all() : Product::searchFor($terms);
 
-        return fractal($vehicles, new ProductRecord())->respond(200, [], JSON_PRETTY_PRINT);
+        return fractal($products, new ProductRecord())->respond(200, [], JSON_PRETTY_PRINT);
     }
 
     /**

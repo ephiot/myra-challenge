@@ -25,12 +25,12 @@ class Product
     /**
      * @var  ?float  $price  Price
      */
-    protected ?float $price;
+    public ?float $price;
 
     /**
      * @var  ?int  $quantity  Quantity
      */
-    protected ?int $quantity;
+    public ?int $quantity;
 
     /**
      * Constructor
@@ -72,7 +72,7 @@ class Product
         $this->name = $name;
         $this->description = $description;
         $this->brand = $brand;
-        $this->year = (is_float($price)) ? $price : 0;
-        $this->quantity = (is_int($quantity)) ? $quantity : 0;
+        $this->price = $price;
+        $this->quantity = $quantity;
     }
 }

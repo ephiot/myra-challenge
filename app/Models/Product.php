@@ -60,7 +60,7 @@ class Product extends Model
      */
     public static function getFromDTO(ProductDTO $source): mixed
     {
-        return  self::where('name', $source->product)
+        return  self::where('name', $source->name)
                     ->where('brand', $source->brand)
                     ->first();
     }

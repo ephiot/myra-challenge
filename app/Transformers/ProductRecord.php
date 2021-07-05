@@ -36,8 +36,8 @@ class ProductRecord extends TransformerAbstract
             'name' => (string) $model->name,
             'description' => (string) $model->description,
             'brand' => (string) $model->brand,
-            'price' => (float) $model->price,
-            'quantity' => (int) $model->quantity,
+            'price' => number_format($model->price, 2),
+            'quantity' => $model->quantity,
             'created_at' => $model->created_at, //->format('d/m/Y H:i:s'),
             'updated_at' => $model->updated_at //->format('d/m/Y H:i:s')
         ];
