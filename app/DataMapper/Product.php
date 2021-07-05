@@ -6,7 +6,7 @@ use App\DTO\Product as ProductDTO;
 use App\Http\Requests\ProductStore;
 use App\Http\Requests\ProductUpdate;
 
-class Vehicle
+class Product
 {
     /**
      * Map ProductStore to ProductDTO

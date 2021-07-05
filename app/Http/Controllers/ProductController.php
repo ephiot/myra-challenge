@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\DataMapper\Product as ProductDataMapper;
+use App\Http\Requests\ProductStore;
+use App\Http\Requests\ProductUpdate;
 use App\Models\Product;
+use App\Transformers\ProductRecord;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -10,22 +14,31 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
+    * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $terms = $request->input('q', false);
+
+        $vehicles = (!$terms || !is_string($terms)) ? Product::all() : Product::searchFor($terms);
+
+        return fractal($vehicles, new ProductRecord())->respond(200, [], JSON_PRETTY_PRINT);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  ProductStore  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductStore $request)
     {
-        //
+        $dto = (new ProductDataMapper())->mapProductStore2ProductDTO($request);
+
+        $product = Product::createFromDTO($dto);
+
+        return fractal($product, new ProductRecord())->respond(200, [], JSON_PRETTY_PRINT);
     }
 
     /**
@@ -36,19 +49,23 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return fractal($product, new ProductRecord())->respond(200, [], JSON_PRETTY_PRINT);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  ProductUpdate  $request
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductUpdate $request, Product $product)
     {
-        //
+        $dto = (new ProductDataMapper())->mapProductUpdate2ProductDTO($request);
+
+        $product->updateFromDTO($dto);
+
+        return fractal($product, new ProductRecord())->respond(200, [], JSON_PRETTY_PRINT);
     }
 
     /**
@@ -59,6 +76,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+
+        return fractal($product, new ProductRecord())->respond(200, [], JSON_PRETTY_PRINT);
     }
 }

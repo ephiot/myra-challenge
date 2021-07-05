@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('products', [ProductController::class, 'index']);
+Route::get('products/find', [ProductController::class, 'find']);
+Route::get('products/{product}', [ProductController::class, 'show']);
+Route::post('products', [ProductController::class, 'store']);
+Route::put('products/{product}', [ProductController::class, 'update']);
+Route::patch('products/{product}', [ProductController::class, 'update']);
+Route::delete('products/{product}', [ProductController::class, 'destroy']);
