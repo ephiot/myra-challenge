@@ -69,14 +69,17 @@ class Product extends Model
      * Fulltext search for specified terms
      * 
      * @param  string  $terms  Search terms
+     * @param  string  $orderBy  OrderBy field
+     * @param  string  $orderType  OrderBy type (ASC or DESC)
      * @return Collection
      */
-    public static function searchFor(string $terms): Collection
+    public static function searchFor(string $terms, string $orderBy = null, string $orderType = 'ASC'): Collection
     {
-        return self::whereRaw(
+        $query = self::whereRaw(
             "MATCH (name, description, brand) AGAINST (? IN NATURAL LANGUAGE MODE)",
             [$terms]
-        )->get();
+        );
+        return (is_string($orderBy) && !empty($orderBy)) ? $query->orderBy($orderBy, $orderType)->get() : $query->get();
     }
 
     /**

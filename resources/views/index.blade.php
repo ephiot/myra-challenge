@@ -3,7 +3,27 @@
 @section('content')
 <h1>Products</h1>
 
-<div class='row justify-content-end'>
+<div class='row justify-content'>
+    <div class='col-3'>
+        <select class="form-select" id="order_field">
+            <option value="" selected>Order by</option>
+            <option value='id'>ID</option>
+            <option value='name'>Name</option>
+            <option value='description'>Description</option>
+            <option value='brand'>Brand</option>
+            <option value='price'>Price</option>
+            <option value='quantity'>Quantity</option>
+            <option value='created_at'>Created At</option>
+            <option value='updated_at'>Updated At</option>
+        </select>
+    </div>
+    <div class='col-3'>
+        <select class="form-select" id="order_type">
+            <option value="asc" selected>Ascendent</option>
+            <option value='desc'>Descendent</option>
+        </select>
+    </div>
+    <button id="search" type="button" class="btn btn-primary col-1">Search</button>
     <button id="create-product" type="button" class="btn btn-primary col-4 col-sm-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">Create Product</button>
 </div>
 
@@ -247,9 +267,14 @@
         })
     }
     let getProducts = () => {
+        let orderBy = document.getElementById('order_field').value
+        let orderType = document.getElementById('order_type').value
+
+        let url = (orderBy != '') ? `/api/products?order_by=${orderBy}&order_type=${orderType}` : '/api/products';
+
         $.ajax({
             dataType: 'json',
-            url: '/api/products',
+            url: url,
             success: (data) => {
                 let rows = []
                 $.each(data.data, (key, record) => {
@@ -270,6 +295,9 @@
             }
         })
     }
+    $('#search').click((event) => {
+        getProducts()
+    })
     getProducts()
 })();
 </script>

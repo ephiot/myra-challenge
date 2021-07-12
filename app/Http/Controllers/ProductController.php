@@ -20,8 +20,17 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $terms = $request->input('q', false);
+        $orderBy = $request->input('order_by', false);
+        $orderType = $request->input('order_type', false);
 
-        $products = (!$terms || !is_string($terms)) ? Product::all() : Product::searchFor($terms);
+        $hasTerms = ($terms && is_string($terms));
+        $hasOrder = ($orderBy && is_string($orderBy) && !empty($orderBy));
+
+        if ($hasOrder) {
+            $products = ($hasTerms) ? Product::searchFor($terms, $orderBy, $orderType) : Product::orderBy($orderBy, $orderType)->get();
+        } else {
+            $products = ($hasTerms) ? Product::searchFor($terms) : Product::all();
+        }
 
         return fractal($products, new ProductRecord())->respond(200, [], JSON_PRETTY_PRINT);
     }
